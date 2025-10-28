@@ -20,10 +20,10 @@ jobs:
       - name: Get dependencies
         run: flutter pub get
 
-      - name: Build release APK
-        run: flutter build apk --release
+      - name: Build release APK (ignore deprecated embedding)
+        run: flutter build apk --release --ignore-deprecation
 
-      - name: List build directory (for debugging)
+      - name: List build directory (debugging)
         run: ls -R build/app/outputs/
 
       - name: Upload release APK
