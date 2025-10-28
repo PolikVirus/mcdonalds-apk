@@ -1,4 +1,4 @@
-name: Flutter CI
+name: Flutter CI Build
 
 on:
   push:
@@ -9,39 +9,49 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        flutter-channel: [ "stable", "beta" ]
+
     steps:
-    - uses: actions/checkout@v3
+      # Checkout source code
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
-    - name: Setup Flutter
-      uses: subosito/flutter-action@v2
-      with:
-        channel: ${{ matrix.flutter-channel }}
+      # Setup Flutter
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.24.0'  # You can change to any version you use
+          channel: 'stable'
 
-    - name: Cache Pub dependencies
-      uses: actions/cache@v3
-      with:
-        path: ~/.pub-cache
-        key: ${{ runner.os }}-pub-${{ hashFiles('**/pubspec.yaml') }}
-        restore-keys: |
-          ${{ runner.os }}-pub-
+      # Cache dependencies for faster builds
+      - name: Cache Flutter dependencies
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.pub-cache
+            ~/.flutter
+          key: ${{ runner.os }}-flutter-${{ hashFiles('**/pubspec.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-flutter-
 
-    - name: Install dependencies
-      run: flutter pub get
+      # Install dependencies
+      - name: Install dependencies
+        run: flutter pub get
 
-    - name: Run analyzer
-      run: flutter analyze --no-fatal-infos
+      # Run static analysis
+      - name: Analyze code
+        run: flutter analyze
 
-    - name: Run tests
-      run: flutter test --coverage
+      # Run tests (optional - you can remove if no tests exist)
+      - name: Run tests
+        run: flutter test --no-pub --coverage
 
-    - name: Build APK
-      run: flutter build apk --release
+      # Build release APK
+      - name: Build release APK
+        run: flutter build apk --release
 
-    - name: Upload artifact
-      uses: actions/upload-artifact@v3
-      with:
-        name: app-release.apk
-        path: build/app/outputs/flutter-apk/app-release.apk
+      # Upload built artifact
+      - name: Upload APK artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: app-release-apk
+          path: build/app/outputs/flutter-apk/app-release.apk
