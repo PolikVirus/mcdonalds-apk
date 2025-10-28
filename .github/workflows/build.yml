@@ -1,34 +1,53 @@
-name: Build Android APK
+name: Build Flutter APK
 
 on:
-  workflow_dispatch:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
 
 jobs:
   build:
     runs-on: ubuntu-latest
 
     steps:
+      # 1️⃣ Checkout repo
       - name: Checkout repository
         uses: actions/checkout@v4
 
+      # 2️⃣ Setup Flutter (your version)
       - name: Set up Flutter
         uses: subosito/flutter-action@v2
         with:
           flutter-version: '2.10.5'
           channel: 'stable'
+      
+      # 3️⃣ Set up Java 11 (Gradle 7.x compatible)
+      - name: Set up Java
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'temurin'
+          java-version: '11'
 
-      - name: Get dependencies
+      # 4️⃣ Upgrade Gradle wrapper to fix Groovy bug
+      - name: Upgrade Gradle wrapper
+        run: |
+          cd android
+          # Update gradle-wrapper.properties to use Gradle 7.3.3
+          sed -i 's#distributionUrl=.*#distributionUrl=https\://services.gradle.org/distributions/gradle-7.3.3-all.zip#g' gradle/wrapper/gradle-wrapper.properties
+          cd ..
+
+      # 5️⃣ Install dependencies
+      - name: Install dependencies
         run: flutter pub get
 
-      - name: Build release APK (ignore deprecated embedding)
+      # 6️⃣ Build the APK (ignores old embedding warning)
+      - name: Build release APK
         run: flutter build apk --release --ignore-deprecation
 
-      - name: List build directory (debugging)
-        run: ls -R build/app/outputs/
-
-      - name: Upload release APK
+      # 7️⃣ Upload result as artifact
+      - name: Upload APK artifact
         uses: actions/upload-artifact@v4
         with:
-          name: McDonalds-release
+          name: app-release
           path: build/app/outputs/flutter-apk/app-release.apk
-          if-no-files-found: error
