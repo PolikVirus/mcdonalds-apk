@@ -2,8 +2,8 @@ name: Build Flutter APK
 
 on:
   push:
-    branches: ['*']
-  workflow_dispatch:
+    branches: ['*']        # triggers on any commit
+  workflow_dispatch:       # lets you manually run the workflow
 
 jobs:
   build:
@@ -25,22 +25,20 @@ jobs:
           distribution: 'temurin'
           java-version: '17'
 
-      - name: Fix old dependencies and SDK for null safety
+      - name: Fix dependencies safely
         run: |
-          # Fix environment SDK to enable null safety
-          sed -i 's/sdk: .*/sdk: ">=2.12.0 <4.0.0"/' pubspec.yaml || \
-          echo -e "environment:\n  sdk: \">=2.12.0 <4.0.0\"" >> pubspec.yaml
-          
-          # Force update outdated packages to null-safe versions
+          # Add environment SDK only if missing
+          if ! grep -q "^environment:" pubspec.yaml; then
+            echo -e "environment:\n  sdk: \">=2.12.0 <4.0.0\"" >> pubspec.yaml
+          fi
+
+          # Force upgrade specific outdated packages
           sed -i 's/cupertino_icons: .*/cupertino_icons: ^1.0.8/' pubspec.yaml || true
           sed -i 's/google_fonts: .*/google_fonts: ^6.3.0/' pubspec.yaml || true
           sed -i 's/flutter_svg: .*/flutter_svg: ^2.0.10+1/' pubspec.yaml || true
-          
-          # Upgrade dependencies
-          flutter pub upgrade --major-versions
 
-      - name: Install dependencies
-        run: flutter pub get
+          # Install dependencies safely
+          flutter pub get
 
       - name: Build release APK
         run: flutter build apk --release --ignore-deprecation
