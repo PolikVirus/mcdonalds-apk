@@ -6,12 +6,18 @@ class OrderItem extends StatelessWidget {
   final String price;
   final int quantity;
 
-  OrderItem({@required this.imageUrl, @required this.name, @required this.price, @required this.quantity});
+  const OrderItem({
+    required this.imageUrl,
+    required this.name,
+    required this.price,
+    required this.quantity,
+    Key? key,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.symmetric(vertical: 8),
+      padding: const EdgeInsets.symmetric(vertical: 8),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
@@ -21,32 +27,26 @@ class OrderItem extends StatelessWidget {
               height: 28,
             ),
           ),
-          SizedBox(
-            height: 8,
-          ),
+          const SizedBox(height: 8),
           Text(
             name,
             textAlign: TextAlign.center,
-            style: TextStyle(
+            style: const TextStyle(
               fontSize: 10,
               fontWeight: FontWeight.w900,
               color: Colors.black,
             ),
           ),
-          SizedBox(
-            height: 8,
-          ),
+          const SizedBox(height: 8),
           Text(
-            "$price",
+            price,
             textAlign: TextAlign.center,
-            style: TextStyle(
+            style: const TextStyle(
               fontSize: 12,
               color: Colors.black,
             ),
           ),
-          SizedBox(
-            height: 8,
-          ),
+          const SizedBox(height: 8),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
@@ -56,7 +56,7 @@ class OrderItem extends StatelessWidget {
                 height: 16,
                 decoration: BoxDecoration(
                   color: Colors.grey[50],
-                  borderRadius: BorderRadius.all(
+                  borderRadius: const BorderRadius.all(
                     Radius.circular(5),
                   ),
                   border: Border.all(
@@ -64,7 +64,7 @@ class OrderItem extends StatelessWidget {
                     color: Colors.grey,
                   ),
                 ),
-                child: Center(
+                child: const Center(
                   child: Icon(
                     Icons.remove,
                     size: 10,
@@ -72,30 +72,26 @@ class OrderItem extends StatelessWidget {
                   ),
                 ),
               ),
-              SizedBox(
-                width: 8,
-              ),
+              const SizedBox(width: 8),
               Text(
-                "$quantity",
-                style: TextStyle(
+                '$quantity',
+                style: const TextStyle(
                   color: Colors.black,
                   fontSize: 12,
                   fontWeight: FontWeight.w900,
                 ),
               ),
-              SizedBox(
-                width: 8,
-              ),
+              const SizedBox(width: 8),
               Container(
                 width: 22,
                 height: 16,
-                decoration: BoxDecoration(
+                decoration: const BoxDecoration(
                   color: Color(0xFFFFCB3F),
                   borderRadius: BorderRadius.all(
                     Radius.circular(5),
                   ),
                 ),
-                child: Center(
+                child: const Center(
                   child: Icon(
                     Icons.add,
                     size: 10,
