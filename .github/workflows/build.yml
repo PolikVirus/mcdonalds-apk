@@ -3,7 +3,7 @@ name: Build Flutter APK
 on:
   push:
     branches: ['*']
-  workflow_dispatch:  # lets you run the workflow manually from the Actions tab
+  workflow_dispatch:
 
 jobs:
   build:
@@ -25,20 +25,19 @@ jobs:
           distribution: 'temurin'
           java-version: '17'
 
-      - name: Force update dependencies for modern Flutter
+      - name: Fix old dependencies and SDK for null safety
         run: |
-          # Ensure environment SDK line exists
-          if ! grep -q "sdk:" pubspec.yaml; then
-            echo "environment:" >> pubspec.yaml
-            echo "  sdk: \">=2.12.0 <4.0.0\"" >> pubspec.yaml
-          fi
+          # Fix environment SDK to enable null safety
+          sed -i 's/sdk: .*/sdk: ">=2.12.0 <4.0.0"/' pubspec.yaml || \
+          echo -e "environment:\n  sdk: \">=2.12.0 <4.0.0\"" >> pubspec.yaml
           
-          # Update outdated dependencies automatically
-          flutter pub add cupertino_icons:^1.0.8
-          flutter pub add google_fonts:^6.3.0
-          flutter pub add flutter_svg:^2.0.10+1
+          # Force update outdated packages to null-safe versions
+          sed -i 's/cupertino_icons: .*/cupertino_icons: ^1.0.8/' pubspec.yaml || true
+          sed -i 's/google_fonts: .*/google_fonts: ^6.3.0/' pubspec.yaml || true
+          sed -i 's/flutter_svg: .*/flutter_svg: ^2.0.10+1/' pubspec.yaml || true
           
-          flutter pub upgrade
+          # Upgrade dependencies
+          flutter pub upgrade --major-versions
 
       - name: Install dependencies
         run: flutter pub get
