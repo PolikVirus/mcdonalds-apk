@@ -11,8 +11,8 @@ class OrderItem extends StatelessWidget {
     required this.name,
     required this.price,
     required this.quantity,
-    Key? key,
-  }) : super(key: key);
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -49,20 +49,14 @@ class OrderItem extends StatelessWidget {
           const SizedBox(height: 8),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
               Container(
                 width: 22,
                 height: 16,
                 decoration: BoxDecoration(
                   color: Colors.grey[50],
-                  borderRadius: const BorderRadius.all(
-                    Radius.circular(5),
-                  ),
-                  border: Border.all(
-                    width: 0.5,
-                    color: Colors.grey,
-                  ),
+                  borderRadius: const BorderRadius.all(Radius.circular(5)),
+                  border: Border.all(width: 0.5, color: Colors.grey),
                 ),
                 child: const Center(
                   child: Icon(
@@ -87,9 +81,7 @@ class OrderItem extends StatelessWidget {
                 height: 16,
                 decoration: const BoxDecoration(
                   color: Color(0xFFFFCB3F),
-                  borderRadius: BorderRadius.all(
-                    Radius.circular(5),
-                  ),
+                  borderRadius: BorderRadius.all(Radius.circular(5)),
                 ),
                 child: const Center(
                   child: Icon(
