@@ -5,7 +5,12 @@ class PopularItem extends StatelessWidget {
   final String imageUrl;
   final String price;
 
-  PopularItem({@required this.title, @required this.imageUrl, @required this.price});
+  const PopularItem({
+    required this.title,
+    required this.imageUrl,
+    required this.price,
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -24,28 +29,24 @@ class PopularItem extends StatelessWidget {
                       height: 36,
                     ),
                   ),
-                  SizedBox(
-                    height: 8,
-                  ),
+                  const SizedBox(height: 8),
                   Text(
                     title,
                     textAlign: TextAlign.center,
-                    style: TextStyle(
+                    style: const TextStyle(
                       fontSize: 10,
                       fontWeight: FontWeight.w900,
                       color: Colors.black,
                     ),
                   ),
-                  SizedBox(
-                    height: 8,
-                  ),
+                  const SizedBox(height: 8),
                 ],
               ),
             ),
             Text(
-              "$price",
+              price,
               textAlign: TextAlign.center,
-              style: TextStyle(
+              style: const TextStyle(
                 fontSize: 14,
                 fontWeight: FontWeight.w900,
                 color: Color(0xFFFFCB3F),
