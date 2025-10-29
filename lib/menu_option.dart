@@ -3,9 +3,14 @@ import 'package:flutter/material.dart';
 class MenuOption extends StatelessWidget {
   final String title;
   final String imageUrl;
-  final int discount;
+  final int? discount; // nullable now
 
-  MenuOption({@required this.title, @required this.imageUrl, this.discount});
+  const MenuOption({
+    required this.title,
+    required this.imageUrl,
+    this.discount,
+    Key? key,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -14,8 +19,8 @@ class MenuOption extends StatelessWidget {
         aspectRatio: 1,
         child: Container(
           decoration: BoxDecoration(
-            color: discount != null ? Color(0xFFC8151D) : Colors.grey[50],
-            borderRadius: BorderRadius.all(
+            color: discount != null ? const Color(0xFFC8151D) : Colors.grey[50],
+            borderRadius: const BorderRadius.all(
               Radius.circular(30),
             ),
           ),
@@ -28,9 +33,7 @@ class MenuOption extends StatelessWidget {
                   height: 48,
                 ),
               ),
-              SizedBox(
-                height: 8,
-              ),
+              const SizedBox(height: 8),
               Text(
                 title,
                 textAlign: TextAlign.center,
@@ -40,14 +43,12 @@ class MenuOption extends StatelessWidget {
                   color: discount != null ? Colors.white : Colors.black,
                 ),
               ),
-              discount != null
-              ? Column(
+              if (discount != null)
+                Column(
                   children: <Widget>[
-                    SizedBox(
-                      height: 8,
-                    ),
+                    const SizedBox(height: 8),
                     Container(
-                      decoration: BoxDecoration(
+                      decoration: const BoxDecoration(
                         color: Colors.white30,
                         borderRadius: BorderRadius.all(
                           Radius.circular(15),
@@ -58,7 +59,7 @@ class MenuOption extends StatelessWidget {
                             horizontal: 8.0, vertical: 4.0),
                         child: Text(
                           "$discount% off",
-                          style: TextStyle(
+                          style: const TextStyle(
                             fontSize: 8,
                             color: Colors.white,
                           ),
@@ -66,8 +67,7 @@ class MenuOption extends StatelessWidget {
                       ),
                     ),
                   ],
-                )
-              : Container(),
+                ),
             ],
           ),
         ),
