@@ -3,11 +3,7 @@ name: Build Flutter APK
 on:
   push:
     branches: ['*']
-  pull_request:
-    branches: ['*']
-  workflow_dispatch:
-  schedule:
-    - cron: '0 * * * *' # runs every hour just in case
+  workflow_dispatch:  # lets you run the workflow manually from the Actions tab
 
 jobs:
   build:
@@ -31,11 +27,17 @@ jobs:
 
       - name: Force update dependencies for modern Flutter
         run: |
-          sed -i 's/cupertino_icons: .*/cupertino_icons: ^1.0.8/' pubspec.yaml || true
+          # Ensure environment SDK line exists
           if ! grep -q "sdk:" pubspec.yaml; then
             echo "environment:" >> pubspec.yaml
             echo "  sdk: \">=2.12.0 <4.0.0\"" >> pubspec.yaml
           fi
+          
+          # Update outdated dependencies automatically
+          flutter pub add cupertino_icons:^1.0.8
+          flutter pub add google_fonts:^6.3.0
+          flutter pub add flutter_svg:^2.0.10+1
+          
           flutter pub upgrade
 
       - name: Install dependencies
